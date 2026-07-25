@@ -154,3 +154,5 @@ No component in `src/` calls any of the `wa:*`/`contacts:*`/`settings:*` channel
 This software is for legitimate business use only. Ensure you comply with Facebook's Terms of Service and applicable regulations in your jurisdiction. Always operate accounts you are authorized to manage.
 # fb-frontend
 # fb-frontend
+# fb-frontend
+# fb-frontend
