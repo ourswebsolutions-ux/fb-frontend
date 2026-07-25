@@ -85,7 +85,7 @@
     "publish": {
       "provider": "github",
       "owner": "ourswebsolutions-ux",
-      "repo": "whatsapp-automated"
+      "repo": "fb-frontend"
     }
   }
 }
