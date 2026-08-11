@@ -44,6 +44,35 @@ function AccountFormModal({ initial, onSave, onClose, saving }) {
   const [sessionStatus, setSessionStatus] = useState('')
   const [verifyingSession, setVerifyingSession] = useState(false)
   const [error, setError] = useState('')
+
+  // Proxy fields — parse existing proxy string on edit
+  const parseProxy = (proxyStr) => {
+    if (!proxyStr) return { type: 'http', host: '', port: '', user: '', pass: '' }
+    try {
+      const url = new URL(proxyStr)
+      return {
+        type: url.protocol.replace(':', '') || 'http',
+        host: url.hostname || '',
+        port: url.port || '',
+        user: url.username || '',
+        pass: url.password || '',
+      }
+    } catch {
+      return { type: 'http', host: '', port: '', user: '', pass: '' }
+    }
+  }
+  const parsed = parseProxy(initial?.proxy)
+  const [proxyHost, setProxyHost] = useState(parsed.host)
+  const [proxyPort, setProxyPort] = useState(parsed.port)
+  const [proxyUser, setProxyUser] = useState(parsed.user)
+  const [proxyPass, setProxyPass] = useState(parsed.pass)
+  const [proxyType, setProxyType] = useState(parsed.type)
+
+  const buildProxyString = () => {
+    if (!proxyHost.trim() || !proxyPort.trim()) return ''
+    const creds = proxyUser.trim() ? `${proxyUser.trim()}:${proxyPass.trim()}@` : ''
+    return `${proxyType}://${creds}${proxyHost.trim()}:${proxyPort.trim()}`
+  }
   const overlayRef = useRef(null)
 
   const canVerifySession = Boolean(sessionText.trim() && !verifyingSession)
@@ -180,6 +209,9 @@ function AccountFormModal({ initial, onSave, onClose, saving }) {
       ? { email: normalizedEmail }
       : { email: '', phone: normalizedPhone }
     if (initial?.id) payload.status = initial.status
+    // Add proxy if provided
+    const proxyStr = buildProxyString()
+    if (proxyStr) payload.proxy = proxyStr
     try {
       payload.session_data = JSON.parse(sessionData)
     } catch {
@@ -291,6 +323,43 @@ function AccountFormModal({ initial, onSave, onClose, saving }) {
             </button>
             {sessionError && <p className="text-xs text-red-300">{sessionError}</p>}
             {sessionStatus === 'verified' && <p className="text-xs text-emerald-300">✓ Session Verified</p>}
+          </div>
+
+          {/* Proxy Settings */}
+          <div className="space-y-2">
+            <label className="text-xs font-bold text-slate-400 uppercase tracking-widest">Proxy (Optional)</label>
+            <p className="text-xs text-slate-500">Add a residential proxy to avoid Facebook IP restrictions on server.</p>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-xs text-slate-500 mb-1 block">Type</label>
+                <select className="input text-sm" value={proxyType} onChange={(e) => setProxyType(e.target.value)}>
+                  <option value="http">HTTP</option>
+                  <option value="https">HTTPS</option>
+                  <option value="socks5">SOCKS5</option>
+                </select>
+              </div>
+              <div>
+                <label className="text-xs text-slate-500 mb-1 block">Port</label>
+                <input className="input text-sm" type="text" placeholder="e.g. 7000" value={proxyPort} onChange={(e) => setProxyPort(e.target.value)} />
+              </div>
+            </div>
+            <div>
+              <label className="text-xs text-slate-500 mb-1 block">Host / IP</label>
+              <input className="input text-sm" type="text" placeholder="e.g. gate.smartproxy.com" value={proxyHost} onChange={(e) => setProxyHost(e.target.value)} />
+            </div>
+            <div className="grid grid-cols-2 gap-2">
+              <div>
+                <label className="text-xs text-slate-500 mb-1 block">Username</label>
+                <input className="input text-sm" type="text" placeholder="Proxy username" value={proxyUser} onChange={(e) => setProxyUser(e.target.value)} />
+              </div>
+              <div>
+                <label className="text-xs text-slate-500 mb-1 block">Password</label>
+                <input className="input text-sm" type="password" placeholder="Proxy password" value={proxyPass} onChange={(e) => setProxyPass(e.target.value)} />
+              </div>
+            </div>
+            {buildProxyString() && (
+              <p className="text-xs text-emerald-400 font-mono break-all">✓ {buildProxyString()}</p>
+            )}
           </div>
         </div>
         {/* Footer */}

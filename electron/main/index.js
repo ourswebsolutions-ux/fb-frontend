@@ -22,8 +22,8 @@ const axios = require('axios')
 let db, waService, mainWindow
 
 const CSP = isDev
-  ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:* http://127.0.0.1:* https://127.0.0.1:* https://outreach.axorawebsolutions.com https://pylister.axorawebsolutions.com https://vps.axorawebsolutions.com;"
-  : "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://outreach.axorawebsolutions.com https://pylister.axorawebsolutions.com https://vps.axorawebsolutions.com;";
+  ? "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' http://localhost:* https://localhost:* ws://localhost:* wss://localhost:* http://127.0.0.1:* https://127.0.0.1:* https://outreach.axorawebsolutions.com https://pylister.axorawebsolutions.com https://vps.axorawebsolutions.com wss://vps.axorawebsolutions.com;"
+  : "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob: https:; font-src 'self' data:; connect-src 'self' https://outreach.axorawebsolutions.com https://pylister.axorawebsolutions.com https://vps.axorawebsolutions.com wss://vps.axorawebsolutions.com;";
 function getDb() {
  
 
@@ -94,8 +94,9 @@ function createWindow() {
     callback({ responseHeaders: headers })
   })
 
-  // Always open DevTools for debugging — remove before final release
-  mainWindow.webContents.openDevTools({ mode: 'detach' })
+  if (isDev) {
+    mainWindow.webContents.openDevTools({ mode: 'detach' })
+  }
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
 
