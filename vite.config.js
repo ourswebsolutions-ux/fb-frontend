@@ -15,8 +15,9 @@ export default defineConfig({
     emptyOutDir: true,
   },
   server: {
-    port: 5173,
+    port: 5300,
     strictPort: true,
+    host: '127.0.0.1',
     proxy: {
       '/api': {
         target: 'https://vps.axorawebsolutions.com',

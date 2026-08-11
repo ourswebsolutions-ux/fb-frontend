@@ -94,14 +94,13 @@ function createWindow() {
     callback({ responseHeaders: headers })
   })
 
-  if (isDev) {
-    mainWindow.webContents.openDevTools({ mode: 'detach' })
-  }
+  // Always open DevTools for debugging
+  mainWindow.webContents.openDevTools({ mode: 'detach' })
 
   mainWindow.once('ready-to-show', () => mainWindow.show());
 
   if (isDev) {
-    mainWindow.loadURL('http://localhost:5173');
+    mainWindow.loadURL('http://localhost:5300');
   } else {
     mainWindow.loadFile(path.join(__dirname, '../../dist/index.html'));
   }
