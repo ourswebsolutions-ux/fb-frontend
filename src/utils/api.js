@@ -1,14 +1,14 @@
 import axios from 'axios'
 
 // ── Base URL management ──────────────────────────────────────────────────────
-// Use empty string so browser uses relative URLs via Vite proxy
-// Electron production uses absolute URL stored in localStorage
-const DEFAULT_BACKEND_URL = ''
+// Electron production: absolute URL
+// Browser/web: empty string (Vite proxy handles routing)
+const DEFAULT_BACKEND_URL = 'https://vps.axorawebsolutions.com'
 
 const _stored = localStorage.getItem('fb_base_url') || ''
 const _isWrongUrl = _stored === ''
   || _stored.includes('outreach.axorawebsolutions.com')
-  || _stored.includes('vps.axorawebsolutions.com')
+  || _stored.includes('pylister.axorawebsolutions.com')
   || _stored.includes('localhost')
   || _stored.includes('127.0.0.1')
 if (_isWrongUrl) {
