@@ -18,15 +18,14 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
     proxy: {
-      // Proxy API requests to the backend to avoid CORS in development
       '/api': {
-        target: 'https://pylister.axorawebsolutions.com',
+        target: 'https://vps.axorawebsolutions.com',
         changeOrigin: true,
         secure: false,
         ws: true,
       },
       '/health': {
-        target: 'https://pylister.axorawebsolutions.com',
+        target: 'https://vps.axorawebsolutions.com',
         changeOrigin: true,
         secure: false,
       },
